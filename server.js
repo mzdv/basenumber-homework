@@ -90,4 +90,4 @@ net.createServer(function(socket) {
         })
 }).listen(1389);        //the only patriotic port in the world
 
-console.log("BMK server is operational.");
+console.log("Basenumber management server is operational.");
