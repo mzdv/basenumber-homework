@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 bmk-over-tcp
 ===========
 Application protocol based on the song "Grga taksista" from Baja Mali Knindza, commonly called as "Vozi me za Surcin"
@@ -70,3 +71,9 @@ License
 =======
 MIT
 
+=======
+basenumber-homework
+===================
+
+Homework that uses a P2P architecture and a centralized server for converting numbers
+>>>>>>> c81b622632b46b0f162940a2203bbe4c2de0ea6c
