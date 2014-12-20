@@ -32,7 +32,10 @@ rl
                 break;
 
             case "server":
-                if (regexContainer.ipRegex.test(message[1])) {
+                if(_.isUndefined(message[1])) {
+                    console.log(clc.greenBright("IP address must be in IPv4 format (aaa.bbb.ccc.ddd). \n"));
+                }
+                else if (regexContainer.ipRegex.test(message[1])) {
                     serverAddress = message[1];
                     console.log(clc.greenBright("Entered new base server address: " + clc.yellowBright(serverAddress) + '\n'));
                 }
@@ -41,7 +44,10 @@ rl
                 break;
 
             case "number":
-                if (regexContainer.numberRegex.test(message[1])) {
+                if(_.isUndefined(message[1])) {
+                    console.log(clc.greenBright("Number must be non-negative. \n"));
+                }
+                else if (regexContainer.numberRegex.test(message[1])) {
                     number = message[1];
                     console.log(clc.greenBright("Entered new number for conversion: " + clc.yellowBright(number) + '\n'));
                 }
@@ -49,8 +55,8 @@ rl
                     console.log(clc.redBright("Not a supported number!"));
                 break;
 
-            case "conversions": // TODO: setup_conversions which sets up the conversions FOR THIS SERVER
-                if(_.isUndefined(message[1])){   // TODO: include this in the above examples
+            case "conversions": // TODO: incoming_conversions which sets up the conversions FOR THIS SERVER
+                if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Possible conversions to choose from: \n"));
                     console.log(clc.greenBright("1) 10 to 16\n"));
                     console.log(clc.greenBright("2) 16 to 10\n"));
