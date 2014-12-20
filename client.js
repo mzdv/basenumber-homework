@@ -38,9 +38,9 @@ rl
                 break;
 
             case "status":
-                console.log(clc.greenBright("Base server: ") + clc.blueBright(serverAddress) + '\n');
-                console.log(clc.greenBright("Number: ") + clc.blueBright(number) + '\n');
-                console.log(clc.greenBright("Conversion: ") + clc.blueBright(wantedConversion) + '\n');
+                console.log(clc.greenBright("Base server: ") + clc.yellowBright(serverAddress) + '\n');
+                console.log(clc.greenBright("Number: ") + clc.yellowBright(number) + '\n');
+                console.log(clc.greenBright("Conversion: ") + clc.yellowBright(wantedConversion) + '\n');
                 break;
 
             case "server":
@@ -52,7 +52,7 @@ rl
                     console.log(clc.greenBright("Entered new base server address: " + clc.yellowBright(serverAddress) + '\n'));
                 }
                 else
-                    console.log(clc.redBright("Not a valid IP address!"));
+                    console.log(clc.redBright("Not a valid IP address!\n"));
                 break;
 
             case "number":
@@ -64,7 +64,7 @@ rl
                     console.log(clc.greenBright("Entered new number for conversion: " + clc.yellowBright(number) + '\n'));
                 }
                 else
-                    console.log(clc.redBright("Not a supported number!"));
+                    console.log(clc.redBright("Not a supported number!\n"));
                 break;
 
             case "conversion": // TODO: incoming_conversions which sets up the conversions FOR THIS SERVER
@@ -86,7 +86,7 @@ rl
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
                 }
                 else
-                    console.log(clc.redBright("Not a valid conversion choice!"));
+                    console.log(clc.redBright("Not a valid conversion choice!\n"));
                 break;
 
             case "quit":
@@ -96,10 +96,10 @@ rl
             case "start":
                 var conversion = startSequence(serverAddress, number, wantedConversion);
 
-                console.log(clc.greenBright("Converted number is: ") + clc.blueBright(conversion.convertedNumber) + '\n' +
-                clc.greenBright("Original number was: ") + clc.blueBright(number) + '\n' +
-                clc.greenBright("Conversion was from base system to base system: ") + clc.blueBright(conversion.conversionType) + '\n' +
-                clc.greenBright("Conversion done at server: ") + clc.blueBright(conversion.converterAddress) + '\n');
+                console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
+                clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
+                clc.greenBright("Conversion was from base system to base system: ") + clc.yellowBright(conversion.conversionType) + '\n' +
+                clc.greenBright("Conversion done at server: ") + clc.yellowBright(conversion.converterAddress) + '\n');
                 break;
 
             default:
