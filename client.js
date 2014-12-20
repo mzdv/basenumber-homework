@@ -10,16 +10,16 @@ var regexContainer = require('./regexContainer');
 
 var possibleConversionTypes = ["10.16", "16.10", "8.4", "4.8", "2.10", "10.2", "5.7", "7.5"];
 
+var serverAddress;
 var number;
 var wantedConversion;
-var serverAddress;
 
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     completer: function(line) {
-        var completions = ["hello", "server", "address", "number", "conversion", "quit", "start"];
-        var hits = completions.filter(function(c) { return c.indexOf(line) == 0 });
+        var completions = ["hello", "status", "server", "address", "number", "conversion", "quit", "start"];
+        var hits = _.filter(completions, function(c) { return c.indexOf(line) == 0 });
 
         return [hits.length ? hits : completions, line]
     }
@@ -35,6 +35,12 @@ rl
         switch(message[0]){
             case "hello":
                 console.log(clc.greenBright("Hello there!\n"));
+                break;
+
+            case "status":
+                console.log(clc.greenBright("Base server: ") + clc.blueBright(serverAddress) + '\n');
+                console.log(clc.greenBright("Number: ") + clc.blueBright(number) + '\n');
+                console.log(clc.greenBright("Conversion: ") + clc.blueBright(wantedConversion) + '\n');
                 break;
 
             case "server":
