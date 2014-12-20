@@ -5,11 +5,11 @@
 
 
 
-startSequence = function(serverAddress, number, conversions) {
+startSequence = function(serverAddress, number, wantedConversion) {
 
     var conversion = {
         convertedNumber: number.toString(),
-        conversionType: conversions.toString(),         // same here as below
+        conversionType: wantedConversion.toString(),         // same here as below
         converterAddress: serverAddress.toString()      // this is a monkeypatch so I could test the program. This should return the converted server address
     };
 
