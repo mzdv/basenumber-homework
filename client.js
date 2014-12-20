@@ -13,6 +13,7 @@ var possibleConversionTypes = ["10.16", "16.10", "8.4", "4.8", "2.10", "10.2", "
 var serverAddress;
 var number;
 var wantedConversion;
+var outgoingConversions;
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -96,12 +97,16 @@ rl
                 break;
 
             case "start":
+                if(_.isUndefined(serverAddress) || _.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(outgoingConversions))
+                    console.log(clc.redBright("Some parameters weren't assigned!"));
+                else {
                 var conversion = startSequence(serverAddress, number, wantedConversion);
 
                 console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
                 clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
                 clc.greenBright("Conversion was from base system to base system: ") + clc.yellowBright(conversion.conversionType) + '\n' +
                 clc.greenBright("Conversion done at server: ") + clc.yellowBright(conversion.converterAddress) + '\n');
+                }
                 break;
 
             default:
