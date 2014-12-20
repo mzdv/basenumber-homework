@@ -18,7 +18,7 @@ var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     completer: function(line) {
-        var completions = ["hello", "status", "server", "address", "number", "conversion", "quit", "start"];
+        var completions = ["hello", "status", "base_server", "address", "number", "outgoing_conversion", "incoming_conversions", "quit", "start"];
         var hits = _.filter(completions, function(c) { return c.indexOf(line) == 0 });
 
         return [hits.length ? hits : completions, line]
@@ -43,7 +43,7 @@ rl
                 console.log(clc.greenBright("Conversion: ") + clc.yellowBright(wantedConversion) + '\n');
                 break;
 
-            case "server":
+            case "base_server":
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("IP address must be in IPv4 format (aaa.bbb.ccc.ddd). \n"));
                 }
@@ -67,7 +67,7 @@ rl
                     console.log(clc.redBright("Not a supported number!\n"));
                 break;
 
-            case "conversion": // TODO: incoming_conversions which sets up the conversions FOR THIS SERVER
+            case "outgoing_conversion":
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Possible conversions to choose from: \n"));
                     console.log(clc.greenBright("1) 10 to 16\n"));
@@ -87,6 +87,8 @@ rl
                 }
                 else
                     console.log(clc.redBright("Not a valid conversion choice!\n"));
+                break;
+            case "incoming_conversions":
                 break;
 
             case "quit":
