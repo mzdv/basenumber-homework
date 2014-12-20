@@ -22,7 +22,7 @@ var rl = readline.createInterface({
         var completions = ["hello", "status", "base_server", "address", "number", "outgoing_conversion", "incoming_conversions", "quit", "start"];
         var hits = _.filter(completions, function(c) { return c.indexOf(line) == 0 });
 
-        return [hits.length ? hits : completions, line]
+        return [hits.length ? hits : completions, line];
     }
 });
 
