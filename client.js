@@ -26,10 +26,6 @@ rl
                 console.log(clc.greenBright("Hello there!\n"));
                 break;
 
-            case "help":
-                console.log(clc.greenBright("Wreath of barbs\n"));
-                break;
-
             case "server":
                 serverAddress = message[1];
                 console.log(clc.greenBright("Entered new base server address: " + clc.yellowBright(serverAddress) + '\n'));
@@ -55,7 +51,7 @@ rl
                 console.log(clc.greenBright("Converted number is: ") + clc.blueBright(conversion.convertedNumber) + '\n' +
                             clc.greenBright("Original number was: ") + clc.blueBright(number) + '\n' +
                             clc.greenBright("Conversion was from base system to base system: ") + clc.blueBright(conversion.conversionType) + '\n' +
-                            clc.greenBright("Conversion done at server: ") + clc.blueBright(conversion.convertorAddress) + '\n');
+                            clc.greenBright("Conversion done at server: ") + clc.blueBright(conversion.converterAddress) + '\n');
                 break;
 
             default:            // TO-DO: multiple types of errors defined by a random variable

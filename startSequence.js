@@ -13,7 +13,7 @@ startSequence = function(serverAddress, number, conversions) {
     var conversion = {
         convertedNumber: number.toString(),
         conversionType: conversions.toString(),
-        convertorAddress: serverAddress.toString()
+        converterAddress: serverAddress.toString()
     };
 
     return conversion;
