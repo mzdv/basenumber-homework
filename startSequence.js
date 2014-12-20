@@ -3,17 +3,14 @@
  */
 //var net = require("net");
 
-/*var ipRegex = "/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
-              "\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
-              "\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
-              "\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/";*/
+
 
 startSequence = function(serverAddress, number, conversions) {
 
     var conversion = {
         convertedNumber: number.toString(),
-        conversionType: conversions.toString(),
-        converterAddress: serverAddress.toString()
+        conversionType: conversions.toString(),         // same here as below
+        converterAddress: serverAddress.toString()      // this is a monkeypatch so I could test the program. This should return the converted server address
     };
 
     return conversion;

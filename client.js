@@ -4,10 +4,14 @@
 var readline = require('readline');
 var clc = require('cli-color');
 var startSequence = require('./startSequence');
+var regexContainer = require('./regexContainer');
 
 var number;
 var conversions;
-var serverAddress;      // TO-DO: JSON implementation
+var serverAddress;
+
+//var ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -27,8 +31,12 @@ rl
                 break;
 
             case "server":
-                serverAddress = message[1];
-                console.log(clc.greenBright("Entered new base server address: " + clc.yellowBright(serverAddress) + '\n'));
+                if (regexContainer.ipRegex.test(message[1])) {
+                    serverAddress = message[1];
+                    console.log(clc.greenBright("Entered new base server address: " + clc.yellowBright(serverAddress) + '\n'));
+                }
+                else
+                    console.log(clc.redBright("Not a valid IP address!"));
                 break;
 
             case "number":
