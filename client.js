@@ -40,8 +40,12 @@ rl
                 break;
 
             case "number":
-                number = message[1];
-                console.log(clc.greenBright("Entered new number for conversion: " + clc.yellowBright(number) + '\n'));
+                if (regexContainer.numberRegex.test(message[1])) {
+                    number = message[1];
+                    console.log(clc.greenBright("Entered new number for conversion: " + clc.yellowBright(number) + '\n'));
+                }
+                else
+                    console.log(clc.redBright("Not a supported number!"));
                 break;
 
             case "conversions":
