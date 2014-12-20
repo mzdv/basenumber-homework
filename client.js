@@ -16,7 +16,13 @@ var serverAddress;
 
 var rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
+    completer: function(line) {
+        var completions = ["hello", "server", "address", "number", "conversion", "quit", "start"];
+        var hits = completions.filter(function(c) { return c.indexOf(line) == 0 });
+
+        return [hits.length ? hits : completions, line]
+    }
 });
 
 rl.setPrompt("READY_FOR_ACTION>");
@@ -55,7 +61,7 @@ rl
                     console.log(clc.redBright("Not a supported number!"));
                 break;
 
-            case "conversions": // TODO: incoming_conversions which sets up the conversions FOR THIS SERVER
+            case "conversion": // TODO: incoming_conversions which sets up the conversions FOR THIS SERVER
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Possible conversions to choose from: \n"));
                     console.log(clc.greenBright("1) 10 to 16\n"));
@@ -74,7 +80,7 @@ rl
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
                 }
                 else
-                    console.log(clc.redBright("Not a valid conversion!"));
+                    console.log(clc.redBright("Not a valid conversion choice!"));
                 break;
 
             case "quit":
@@ -82,7 +88,7 @@ rl
                 break;
 
             case "start":
-                var conversion = startSequence(serverAddress, number, conversions);
+                var conversion = startSequence(serverAddress, number, wantedConversion);
 
                 console.log(clc.greenBright("Converted number is: ") + clc.blueBright(conversion.convertedNumber) + '\n' +
                 clc.greenBright("Original number was: ") + clc.blueBright(number) + '\n' +
@@ -90,7 +96,7 @@ rl
                 clc.greenBright("Conversion done at server: ") + clc.blueBright(conversion.converterAddress) + '\n');
                 break;
 
-            default:            // TODO: multiple types of errors defined by a random variable
+            default:
                 console.log(clc.redBright("I'm sorry Dave, I'm afraid I can't do that.\n"));
                 break;
         }
