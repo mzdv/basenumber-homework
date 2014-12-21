@@ -3,9 +3,7 @@
  */
 //var net = require("net");
 
-
-
-startSequence = function(serverAddress, number, wantedConversion) {
+startSequence = function(serverAddress, number, wantedConversion, rl) {
 
     var conversion = {
         convertedNumber: number.toString(),
@@ -14,6 +12,7 @@ startSequence = function(serverAddress, number, wantedConversion) {
     };
 
     return conversion;
+
 };
 
 module.exports = startSequence;

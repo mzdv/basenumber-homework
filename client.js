@@ -13,13 +13,13 @@ var possibleConversionTypes = ["10.16", "16.10", "8.4", "4.8", "2.10", "10.2", "
 var serverAddress;
 var number;
 var wantedConversion;
-var outgoingConversions;
+var possibleConversions;
 
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     completer: function(line) {
-        var completions = ["hello", "status", "base_server", "address", "number", "outgoing_conversion", "incoming_conversions", "quit", "start"];
+        var completions = ["hello", "status", "base_server ", "address ", "number ", "wanted_conversion ", "possible_conversions ", "conversion_server", "quit", "start"];
         var hits = _.filter(completions, function(c) { return c.indexOf(line) == 0 });
 
         return [hits.length ? hits : completions, line];
@@ -34,6 +34,7 @@ rl
         var message = line.trim().toLowerCase().split(" ");
 
         switch(message[0]){
+
             case "hello":
                 console.log(clc.greenBright("Hello there!\n"));
                 break;
@@ -41,11 +42,13 @@ rl
             case "status":
                 console.log(clc.greenBright("Base server: ") + clc.yellowBright(serverAddress) + '\n');
                 console.log(clc.greenBright("Number: ") + clc.yellowBright(number) + '\n');
-                console.log(clc.greenBright("Conversion: ") + clc.yellowBright(wantedConversion) + '\n');
+                console.log(clc.greenBright("Wanted conversion: ") + clc.yellowBright(wantedConversion) + '\n');
+                console.log(clc.blueBright("-------------------------------------------------------------") + '\n');
+                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(_.reduce(possibleConversions, function(element) { return element})) + '\n');
                 break;
 
             case "base_server":
-                if(_.isUndefined(message[1])) {
+                if(_.isUndefined(message[1])) { // TODO: Extract into a monad
                     console.log(clc.greenBright("IP address must be in IPv4 format (aaa.bbb.ccc.ddd). \n"));
                 }
                 else if (regexContainer.ipRegex.test(message[1])) {
@@ -54,6 +57,10 @@ rl
                 }
                 else
                     console.log(clc.redBright("Not a valid IP address!\n"));
+                break;
+
+            case "conversion_server":
+                // TO-DO: implement conversion server
                 break;
 
             case "number":
@@ -68,7 +75,7 @@ rl
                     console.log(clc.redBright("Not a supported number!\n"));
                 break;
 
-            case "outgoing_conversion":
+            case "wanted_conversion":
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Possible conversions to choose from: \n"));
                     console.log(clc.greenBright("1) 10 to 16\n"));
@@ -89,7 +96,9 @@ rl
                 else
                     console.log(clc.redBright("Not a valid conversion choice!\n"));
                 break;
-            case "incoming_conversions":
+
+            case "possible_conversions":
+                // TODO: Implement possible conversions
                 break;
 
             case "quit":
@@ -97,10 +106,11 @@ rl
                 break;
 
             case "start":
-                if(_.isUndefined(serverAddress) || _.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(outgoingConversions))
+                if(_.isUndefined(serverAddress) || _.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(possibleConversions))
                     console.log(clc.redBright("Some parameters weren't assigned!"));
                 else {
-                var conversion = startSequence(serverAddress, number, wantedConversion);
+                    rl.pause();
+                var conversion = startSequence(serverAddress, number, wantedConversion, rl);
 
                 console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
                 clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
