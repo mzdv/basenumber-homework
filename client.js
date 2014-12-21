@@ -4,6 +4,7 @@
 var readline = require("readline");
 var clc = require("cli-color");
 var _ = require("lodash");
+var assert = require("assert");
 
 var startSequence = require('./startSequence');
 var regexContainer = require('./regexContainer');
@@ -15,6 +16,7 @@ var number;
 var wantedConversion;
 var possibleConversions = [];
 var conversionServer;
+var conversionIsNotFull = true;
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -32,6 +34,8 @@ rl.prompt();
 
 rl
     .on("line", function(line) {
+        console.log(clc.greenBright("Remember to set the possible_conversions before everything else!"));
+
         var message = line.trim().toLowerCase().split(" ");
 
         switch(message[0]){
@@ -110,16 +114,21 @@ rl
                     console.log(clc.greenBright("7) 5 to 7\n"));
                     console.log(clc.greenBright("8) 7 to 5\n"));
                 }
+                else if(message[1] === "stop") {
+                    // TODO: Sending of the array to the base server
+                    console.log(clc.greenBright("Sending conversions to the server."));
+                }
                 else if(regexContainer.conversionRegex.test(message[1])) {
                     possibleConversions.push(possibleConversionTypes[message[1] - 1]);
 
                     var dismemberedConversion = _.last(possibleConversions).split('.');
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
-
+                    //
                     possibleConversions = _.uniq(possibleConversions);
                 }
-                else
+                else {
                     console.log(clc.redBright("Not a supported number!\n"));
+                }
                 break;
 
             case "quit":
