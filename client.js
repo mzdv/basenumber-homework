@@ -29,12 +29,14 @@ var rl = readline.createInterface({
     }
 });
 
+console.log(clc.greenBright("Remember to set the possible_conversions before everything else!"));
+
 rl.setPrompt("READY_FOR_ACTION>");
 rl.prompt();
 
 rl
     .on("line", function(line) {
-        console.log(clc.greenBright("Remember to set the possible_conversions before everything else!"));
+
 
         var message = line.trim().toLowerCase().split(" ");
 
@@ -95,7 +97,7 @@ rl
                 else if(regexContainer.conversionRegex.test(message[1])) {
                     wantedConversion = possibleConversionTypes[message[1]];
 
-                    var dismemberedConversion = wantedConversion.split('.');
+                    var dismemberedConversion = wantedConversion.split(' => ');
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
                 }
                 else
@@ -116,12 +118,13 @@ rl
                 }
                 else if(message[1] === "stop") {
                     // TODO: Sending of the array to the base server
+                    // TODO: Starting of the conversion server
                     console.log(clc.greenBright("Sending conversions to the server."));
                 }
                 else if(regexContainer.conversionRegex.test(message[1])) {
                     possibleConversions.push(possibleConversionTypes[message[1] - 1]);
 
-                    var dismemberedConversion = _.last(possibleConversions).split('.');
+                    var dismemberedConversion = _.last(possibleConversions).split(' => ');
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
                     //
                     possibleConversions = _.uniq(possibleConversions);
