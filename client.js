@@ -13,7 +13,7 @@ var possibleConversionTypes = ["10.16", "16.10", "8.4", "4.8", "2.10", "10.2", "
 var serverAddress;
 var number;
 var wantedConversion;
-var possibleConversions;
+var possibleConversions = [];
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -44,7 +44,7 @@ rl
                 console.log(clc.greenBright("Number: ") + clc.yellowBright(number) + '\n');
                 console.log(clc.greenBright("Wanted conversion: ") + clc.yellowBright(wantedConversion) + '\n');
                 console.log(clc.blueBright("-------------------------------------------------------------") + '\n');
-                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(_.reduce(possibleConversions, function(element) { return element})) + '\n');
+                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(possibleConversions) + '\n');
                 break;
 
             case "base_server":
@@ -60,7 +60,7 @@ rl
                 break;
 
             case "conversion_server":
-                // TO-DO: implement conversion server
+                // TODO: implement conversion server
                 break;
 
             case "number":
@@ -98,7 +98,27 @@ rl
                 break;
 
             case "possible_conversions":
-                // TODO: Implement possible conversions
+                if(_.isUndefined(message[1])) {
+                    console.log(clc.greenBright("Possible conversions to choose from: \n"));
+                    console.log(clc.greenBright("1) 10 to 16\n"));
+                    console.log(clc.greenBright("2) 16 to 10\n"));
+                    console.log(clc.greenBright("3) 8 to 4\n"));
+                    console.log(clc.greenBright("4) 4 to 8\n"));
+                    console.log(clc.greenBright("5) 2 to 10\n"));
+                    console.log(clc.greenBright("6) 10 to 2\n"));
+                    console.log(clc.greenBright("7) 5 to 7\n"));
+                    console.log(clc.greenBright("8) 7 to 5\n"));
+                }
+                else if(regexContainer.conversionRegex.test(message[1])) {
+                    possibleConversions.push(possibleConversionTypes[message[1]]);
+
+                    var dismemberedConversion = _.last(possibleConversions).split('.');
+                    console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
+
+                    possibleConversions = _.uniq(possibleConversions);
+                }
+                else
+                    console.log(clc.redBright("Not a supported number!\n"));
                 break;
 
             case "quit":
