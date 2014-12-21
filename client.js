@@ -8,12 +8,13 @@ var _ = require("lodash");
 var startSequence = require('./startSequence');
 var regexContainer = require('./regexContainer');
 
-var possibleConversionTypes = ["10.16", "16.10", "8.4", "4.8", "2.10", "10.2", "5.7", "7.5"];
+var possibleConversionTypes = ["10 => 16", "16 => 10", "8 => 4", "4 => 8", "2 => 10", "10 => 2", "5 => 7", "7 => 5"];
 
 var serverAddress;
 var number;
 var wantedConversion;
 var possibleConversions = [];
+var conversionServer;
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -126,11 +127,10 @@ rl
                 break;
 
             case "start":
-                if(_.isUndefined(serverAddress) || _.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(possibleConversions))
+                if(_.isUndefined(serverAddress) || _.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(possibleConversions) || _.isUndefined(conversionServer))
                     console.log(clc.redBright("Some parameters weren't assigned!"));
                 else {
-                    rl.pause();
-                var conversion = startSequence(serverAddress, number, wantedConversion, rl);
+                var conversion = startSequence(serverAddress, number, wantedConversion, conversionServer);
 
                 console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
                 clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
