@@ -110,7 +110,7 @@ rl
                     console.log(clc.greenBright("8) 7 to 5\n"));
                 }
                 else if(regexContainer.conversionRegex.test(message[1])) {
-                    possibleConversions.push(possibleConversionTypes[message[1]]);
+                    possibleConversions.push(possibleConversionTypes[message[1] - 1]);
 
                     var dismemberedConversion = _.last(possibleConversions).split('.');
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
