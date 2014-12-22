@@ -22,16 +22,10 @@ net.createServer(function(socket) {
 
     socket
         .on("data", function(data) {
-            /*            if (data.toString() !== '~') {
-             socket.write(data.toString());
-             incomingData += data.toString();
-             }
 
-             else {*/
             console.log(data);
             message = data.split(DELIMETER);
 
-            var possibleConversions = message[1].split(',');
             container.push("127.0.0.1:1389#0,1");
             container.push("192.168.30.10:1389#0,1");
             switch (message[0]) {
@@ -94,7 +88,6 @@ net.createServer(function(socket) {
 
             incomingData = '';
             message = [];
-            //}
         })
 
         .on("close", function() {

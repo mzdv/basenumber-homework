@@ -19,10 +19,6 @@ var conversionServer;
 var message = [];
 var response = {};
 
-var getMessageParameter = function() {
-    return message[1];
-};
-
 const DELIMETER = '|';
 
 var rl = readline.createInterface({
@@ -86,9 +82,6 @@ rl
 
                 client.on("data", function(data) {
                     response = JSON.parse(data.toString());         // #magic
-                    //console.log(response.length);
-                    //console.log(response);
-                    //if(_.isUndefined(getMessageParameter())) {
 
                     if(response.error === "CRNA_MI_SE_DZIGERICA_SUSI") {
                         console.log(clc.redBright("\nNo servers are available.\n"));
