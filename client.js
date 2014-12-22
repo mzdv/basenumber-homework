@@ -77,12 +77,12 @@ rl
                 });
 
                 client.on("data", function(data) {
-                    var servers = _.initial(data.toString().split('|'));
-
-                    console.log(servers);
-                    console.log(servers[0]);
-                    console.log(servers[1]);
-                    console.log(servers[2]);
+                    //var servers = _.initial(data.toString().split('|'));
+                    //
+                    //console.log(servers);
+                    //console.log(servers[0]);
+                    //console.log(servers[1]);
+                    //console.log(servers[2]);
                     client.end();
                 });
                 break;
@@ -139,10 +139,13 @@ rl
                     console.log(clc.greenBright("Sending conversions to the server."));
                 }
                 else if(regexContainer.conversionRegex.test(message[1])) {
-                    possibleConversions.push(possibleConversionTypes[message[1] - 1]);
+                    possibleConversions.push(message[1]);
 
-                    var dismemberedConversion = _.last(possibleConversions).split(' => ');
-                    console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
+                    var conversionIndex = _.last(possibleConversions);
+                    console.log(possibleConversions);
+                    console.log(conversionIndex);
+
+                    console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(possibleConversionTypes[conversionIndex]) + '\n'));
                     //
                     possibleConversions = _.uniq(possibleConversions);
                 }
