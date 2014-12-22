@@ -23,7 +23,7 @@ var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     completer: function(line) {
-        var completions = ["hello", "status", "base_server ", "address ", "number ", "wanted_conversion ", "possible_conversions ", "conversion_server", "quit", "start"];
+        var completions = ["hello", "status", "base_server ", "address ", "number ", "wanted_conversion ", "possible_conversions ", "conversion_server ", "quit", "start"];
         var hits = _.filter(completions, function(c) { return c.indexOf(line) == 0 });
 
         return [hits.length ? hits : completions, line];
@@ -77,11 +77,25 @@ rl
                 });
 
                 client.on("data", function(data) {
-                    if(data.toString() === 'x') {
+                    var response = JSON.parse(data.toString());         // #magic
+                    //console.log(response.length);
+                    //console.log(response);
+
+                    if(response.error === "CRNA_MI_SE_DZIGERICA_SUSI") {
                         console.log(clc.redBright("\nNo servers are available."));
                     }
+                    else if(response.length === 1) {
+                        conversionServer = response[0].host;
+                        console.log(conversionServer + " chosen for conversion.");
+                    }
+                    else if(response.length > 1) {
+                            console.log("Choose your preferred conversion server: ");
+                            console.log("------------------------------------------");
+                        for(var i = 0; i < response.length; i++) {
+                            console.log((i+1) + ") " + response[i].host + '\n');
+                        }
+                    }
 
-                    console.log(data.toString());
                     rl.prompt();
 
                     client.end();

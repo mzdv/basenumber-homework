@@ -32,7 +32,8 @@ net.createServer(function(socket) {
             message = data.split(DELIMETER);
 
             var possibleConversions = message[1].split(',');
-
+            container.push("127.0.0.1:1389#0,1");
+            container.push("127.0.0.1:1389#0,1");
             switch (message[0]) {
 
                 case "DJE_SI_GRGA_DRUZE_STARI":     // registrovanje kod servera za konverziju; salje nazad moguce servere za zadatu konverziju
@@ -44,7 +45,11 @@ net.createServer(function(socket) {
 
                     for(var i = 0; i < totalConversions.length; i++) {
                         if(_.contains(totalConversions[i], message[2])) {
-                            possibleServers.push(container[i]);
+                            var answer = {host: "", conversions: []};
+                            answer.host = (container[i].split(':'))[0];
+                            answer.conversions.push(((container[i].split('#'))[1]).split(','));
+
+                            possibleServers.push(answer);
                         }
                     }
 
@@ -53,10 +58,12 @@ net.createServer(function(socket) {
                     console.log(container);
 
                     if(!possibleServers.toString()) {
-                        socket.write('x');
+                        var jsonAnswer = JSON.stringify({error: "CRNA_MI_SE_DZIGERICA_SUSI"});
+                        socket.write(jsonAnswer);
                     }
                     else {
-                        socket.write(drd);
+                        var jsonAnswer = JSON.stringify(possibleServers);
+                        socket.write(jsonAnswer);
                     }
 
                     break;
