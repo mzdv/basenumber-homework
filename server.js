@@ -37,21 +37,27 @@ net.createServer(function(socket) {
 
                 case "DJE_SI_GRGA_DRUZE_STARI":     // registrovanje kod servera za konverziju; salje nazad moguce servere za zadatu konverziju
 
-                        for(var i = 0; i < container.length; i++) {
-                            var conversionsInElement = container[i].split('#');
-                            totalConversions.push(conversionsInElement[1].split(','));
+                    for(var i = 0; i < container.length; i++) {
+                        var conversionsInElement = container[i].split('#');
+                        totalConversions.push(conversionsInElement[1].split(','));
+                    }
+
+                    for(var i = 0; i < totalConversions.length; i++) {
+                        if(_.contains(totalConversions[i], message[2])) {
+                            possibleServers.push(container[i]);
                         }
+                    }
 
-                        for(var i = 0; i < totalConversions.length; i++) {
-                            if(_.contains(totalConversions[i], message[3])) {
-                                possibleServers.push(container[i]);
-                            }
-                        }
+                    container.push(socket.remoteAddress + ':' + port + '#' + message[1]);   // message[1] sadrzi moguce konverzije
 
-                        container.push(socket.remoteAddress + ':' + port + '#' + message[1]);   // message[1] sadrzi moguce konverzije
+                    console.log(container);
 
-                        console.log(container);
-                        socket.write(container.toString());
+                    if(!possibleServers.toString()) {
+                        socket.write('x');
+                    }
+                    else {
+                        socket.write(drd);
+                    }
 
                     break;
 

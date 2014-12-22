@@ -72,19 +72,18 @@ rl
                     host: serverAddress,
                     port: 1389
                 }, function(){
-                    //console.log(clc.greenBright("Conection with the base server established. Stand by."));
+                    console.log(clc.greenBright("\nConnection with the base server established. Stand by."));
                     client.write("DJE_SI_GRGA_DRUZE_STARI" + DELIMETER + possibleConversions + DELIMETER + wantedConversion);
                 });
 
                 client.on("data", function(data) {
+                    if(data.toString() === 'x') {
+                        console.log(clc.redBright("\nNo servers are available."));
+                    }
+
                     console.log(data.toString());
                     rl.prompt();
-                    //var servers = _.initial(data.toString().split('|'));
-                    //
-                    //console.log(servers);
-                    //console.log(servers[0]);
-                    //console.log(servers[1]);
-                    //console.log(servers[2]);
+
                     client.end();
                 });
                 break;
@@ -114,10 +113,10 @@ rl
                     console.log(clc.greenBright("8) 7 to 5\n"));
                 }
                 else if(regexContainer.conversionRegex.test(message[1])) {
-                    wantedConversion = possibleConversionTypes[message[1]];
+                    console.log(message[1]);
+                    wantedConversion = message[1] - 1;
 
-                    var dismemberedConversion = wantedConversion.split(' => ');
-                    console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(dismemberedConversion[0] + " to " + dismemberedConversion[1]) + '\n'));
+                    console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(possibleConversionTypes[wantedConversion]) + '\n'));
                 }
                 else
                     console.log(clc.redBright("Not a valid conversion choice!\n"));
@@ -136,7 +135,7 @@ rl
                     console.log(clc.greenBright("8) 7 to 5\n"));
                 }
                 else if(regexContainer.conversionRegex.test(message[1])) {
-                    possibleConversions.push(message[1]);
+                    possibleConversions.push(message[1] - 1);
 
                     var conversionIndex = _.last(possibleConversions);
                     console.log(possibleConversions);
