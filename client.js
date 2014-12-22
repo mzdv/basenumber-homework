@@ -16,6 +16,12 @@ var number;
 var wantedConversion;
 var possibleConversions = [];
 var conversionServer;
+var message = [];
+var response = {};
+
+var getMessageParameter = function() {
+    return message[1];
+};
 
 const DELIMETER = '|';
 
@@ -23,7 +29,9 @@ var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     completer: function(line) {
-        var completions = ["hello", "status", "base_server ", "address ", "number ", "wanted_conversion ", "possible_conversions ", "conversion_server ", "quit", "start"];
+        var completions = ["hello", "status", "base_server ", "address ", "number ", "wanted_conversion ", "possible_conversions ",
+            "conversion_server ", "select_conversion_server ","quit", "start"];
+
         var hits = _.filter(completions, function(c) { return c.indexOf(line) == 0 });
 
         return [hits.length ? hits : completions, line];
@@ -39,7 +47,7 @@ rl
     .on("line", function(line) {
 
 
-        var message = line.trim().toLowerCase().split(" ");
+        message = line.trim().toLowerCase().split(" ");
 
         switch(message[0]){
 
@@ -72,34 +80,49 @@ rl
                     host: serverAddress,
                     port: 1389
                 }, function(){
-                    console.log(clc.greenBright("\nConnection with the base server established. Stand by."));
+                    console.log(clc.greenBright("\nConnection with the base server established. Stand by.\n"));
                     client.write("DJE_SI_GRGA_DRUZE_STARI" + DELIMETER + possibleConversions + DELIMETER + wantedConversion);
                 });
 
                 client.on("data", function(data) {
-                    var response = JSON.parse(data.toString());         // #magic
+                    response = JSON.parse(data.toString());         // #magic
                     //console.log(response.length);
                     //console.log(response);
+                    //if(_.isUndefined(getMessageParameter())) {
 
                     if(response.error === "CRNA_MI_SE_DZIGERICA_SUSI") {
-                        console.log(clc.redBright("\nNo servers are available."));
+                        console.log(clc.redBright("\nNo servers are available.\n"));
                     }
                     else if(response.length === 1) {
                         conversionServer = response[0].host;
-                        console.log(conversionServer + " chosen for conversion.");
+                        console.log(clc.greenBright(conversionServer + " chosen for conversion.\n"));
                     }
                     else if(response.length > 1) {
-                            console.log("Choose your preferred conversion server: ");
-                            console.log("------------------------------------------");
+                            console.log(clc.greenBright("Choose your preferred conversion server: \n"));
+                            console.log(clc.greenBright("------------------------------------------\n"));
                         for(var i = 0; i < response.length; i++) {
-                            console.log((i+1) + ") " + response[i].host + '\n');
+                            console.log(clc.yellowBright((i+1) + ") " + response[i].host + '\n'));
                         }
                     }
 
-                    rl.prompt();
-
                     client.end();
+
+                    rl.prompt();
                 });
+                break;
+
+            case "select_conversion_server":
+                if(_.isUndefined(message[1])) {
+                    console.log(clc.greenBright("Choosing first server. \n"));
+                    conversionServer = response[0].host;
+                    console.log(clc.greenBright(conversionServer + " chosen for conversion.\n"));
+                }
+                else if (regexContainer.numberRegex.test(message[1]) && message[1] - 1 < response.length) {
+                    conversionServer = response[message[1] - 1].host;
+                    console.log(clc.greenBright("Chosen server: " + clc.yellowBright(conversionServer) + '\n'));
+                }
+                else
+                    console.log(clc.redBright("Not a valid conversion server!\n"));
                 break;
 
             case "number":  // sets the number that is going to be converted

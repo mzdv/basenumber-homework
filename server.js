@@ -33,7 +33,7 @@ net.createServer(function(socket) {
 
             var possibleConversions = message[1].split(',');
             container.push("127.0.0.1:1389#0,1");
-            container.push("127.0.0.1:1389#0,1");
+            container.push("192.168.30.10:1389#0,1");
             switch (message[0]) {
 
                 case "DJE_SI_GRGA_DRUZE_STARI":     // registrovanje kod servera za konverziju; salje nazad moguce servere za zadatu konverziju
