@@ -14,7 +14,8 @@ var message = [];                          // struktura za parsiranje
 var container = [];                        // sadrzi dostupne klijente
 
 var port = process.env.port || 1389;
-var splitPossibleConversions = [];
+var totalConversions = [];
+var possibleServers = [];
 
 net.createServer(function(socket) {
     socket.setEncoding("utf8");
@@ -29,24 +30,29 @@ net.createServer(function(socket) {
              else {*/
             console.log(data);
             message = data.split(DELIMETER);
-            //var firstSplit = message[1].split(':');
+
             var possibleConversions = message[1].split(',');
-            //console.log(message[1]);
 
             switch (message[0]) {
 
-                case "DJE_SI_GRGA_DRUZE_STARI":     // registrovanje kod servera za konverziju
-                    if(container.length === 0) {
-                        socket.write("No available servers for conversion.");
-                        container.push(socket.remoteAddress + ':' + port + ':' + message[1] + "|");
-                    }
-                    else {
+                case "DJE_SI_GRGA_DRUZE_STARI":     // registrovanje kod servera za konverziju; salje nazad moguce servere za zadatu konverziju
 
-                        container.push(socket.remoteAddress + ':' + port + ':' + message[1] + "|");   // message[1] sadrzi moguce konverzije
+                        for(var i = 0; i < container.length; i++) {
+                            var conversionsInElement = container[i].split('#');
+                            totalConversions.push(conversionsInElement[1].split(','));
+                        }
+
+                        for(var i = 0; i < totalConversions.length; i++) {
+                            if(_.contains(totalConversions[i], message[3])) {
+                                possibleServers.push(container[i]);
+                            }
+                        }
+
+                        container.push(socket.remoteAddress + ':' + port + '#' + message[1]);   // message[1] sadrzi moguce konverzije
 
                         console.log(container);
                         socket.write(container.toString());
-                    }
+
                     break;
 
                 case "VOZI_ME_ZA_SURCIN_PREKO_LEDINA":  // prijava o izvrsenoj konverziji

@@ -72,11 +72,13 @@ rl
                     host: serverAddress,
                     port: 1389
                 }, function(){
-                    console.log(clc.greenBright("Conection with the base server established. Stand by."));
-                    client.write("DJE_SI_GRGA_DRUZE_STARI" + DELIMETER + possibleConversions);
+                    //console.log(clc.greenBright("Conection with the base server established. Stand by."));
+                    client.write("DJE_SI_GRGA_DRUZE_STARI" + DELIMETER + possibleConversions + DELIMETER + wantedConversion);
                 });
 
                 client.on("data", function(data) {
+                    console.log(data.toString());
+                    rl.prompt();
                     //var servers = _.initial(data.toString().split('|'));
                     //
                     //console.log(servers);
