@@ -4,6 +4,7 @@
 
 var net = require("net");
 var fs = require("fs");
+var _ = require("lodash");
 
 const DELIMETER = "|";
 
@@ -18,22 +19,28 @@ net.createServer(function(socket) {
 
     socket
         .on("data", function(data) {
-            if (data.toString() !== '~') {
+/*            if (data.toString() !== '~') {
                 socket.write(data.toString());
                 incomingData += data.toString();
             }
 
-            else {
-                message = incomingData.split(DELIMETER);
+            else {*/
+                console.log(data);
+                message = data.split(DELIMETER);
+                var firstSplit = message[1].split(':');
+                var possibleConversions = firstSplit[0].split(',');
+                //console.log(message[1]);
 
                 switch (message[0]) {
 
-                    case "DJE_SI_GRGA_DRUZE_STARI":
-                        container.push(socket.remoteAddress + ':' + port + ':' + message[1] + '\n');   // message[1] sadrzi moguce konverzije
-                        socket.write("ZA_NAPLATU_TI_NE_MARI" + DELIMETER + container + '\n');          // ovime je omogucena loopback konverzija
+                    case "DJE_SI_GRGA_DRUZE_STARI":     // registrovanje kod servera za konverziju
+                        container.push(socket.remoteAddress + ':' + port + ':' + message[1] + "|");   // message[1] sadrzi moguce konverzije
+
+                        console.log(container);
+                        socket.write(container.toString());
                         break;
 
-                    case "VOZI_ME_ZA_SURCIN_PREKO_LEDINA":
+                    case "VOZI_ME_ZA_SURCIN_PREKO_LEDINA":  // prijava o izvrsenoj konverziji
                         var acknowledgementMessage = socket.remoteAddress + '|' + message[1] + '|' + message[2] + '|' + message[3] + '|' + message[4] + message[5] + '\n';
                         // message[1] ip adresa servera za konverziju
                         // message[2] prvobitan broj
@@ -48,18 +55,18 @@ net.createServer(function(socket) {
                         });
                         break;
 
-                    case "DUNI_VJETRE_MALO_PREKO_JETRE":
+                    case "DUNI_VJETRE_MALO_PREKO_JETRE":    // gasenje veze
                         socket.end("UMRIJECU_OD_BOLA_UMRIJELO_SVE_OD_ALKOHOLA");
                         break;
 
-                    default:
+                    default:    // default case
                         socket.write("KUPI_STRIKA_CIPELE_I_DADE_DZEPARAC\n");
                         break;
                 }
 
                 incomingData = '';
                 message = [];
-            }
+            //}
         })
 
         .on("close", function() {

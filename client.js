@@ -4,7 +4,7 @@
 var readline = require("readline");
 var clc = require("cli-color");
 var _ = require("lodash");
-var assert = require("assert");
+var net = require("net");
 
 var startSequence = require('./startSequence');
 var regexContainer = require('./regexContainer');
@@ -16,7 +16,8 @@ var number;
 var wantedConversion;
 var possibleConversions = [];
 var conversionServer;
-var conversionIsNotFull = true;
+
+const DELIMETER = '|';
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -42,20 +43,20 @@ rl
 
         switch(message[0]){
 
-            case "hello":
+            case "hello":   // simple hello
                 console.log(clc.greenBright("Hello there!\n"));
                 break;
 
-            case "status":
+            case "status": // status of important variables
                 console.log(clc.greenBright("Base server: ") + clc.yellowBright(serverAddress) + '\n');
                 console.log(clc.greenBright("Number: ") + clc.yellowBright(number) + '\n');
                 console.log(clc.greenBright("Wanted conversion: ") + clc.yellowBright(wantedConversion) + '\n');
                 console.log(clc.blueBright("-------------------------------------------------------------") + '\n');
-                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(_.forEach(possibleConversions)) + '\n');
+                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(possibleConversions) + '\n');
                 break;
 
-            case "base_server":
-                if(_.isUndefined(message[1])) { // TODO: Extract into a monad
+            case "base_server": // sets the base server used for tracking
+                if(_.isUndefined(message[1])) { // TODO: Extract into a function
                     console.log(clc.greenBright("IP address must be in IPv4 format (aaa.bbb.ccc.ddd). \n"));
                 }
                 else if (regexContainer.ipRegex.test(message[1])) {
@@ -66,11 +67,27 @@ rl
                     console.log(clc.redBright("Not a valid IP address!\n"));
                 break;
 
-            case "conversion_server":
-                // TODO: implement conversion server
+            case "conversion_server": // sets the server used for converting data
+                var client = net.connect({
+                    host: serverAddress,
+                    port: 1389
+                }, function(){
+                    console.log(clc.greenBright("Conection with the base server established. Stand by."));
+                    client.write("DJE_SI_GRGA_DRUZE_STARI" + DELIMETER + possibleConversions);
+                });
+
+                client.on("data", function(data) {
+                    var servers = _.initial(data.toString().split('|'));
+
+                    console.log(servers);
+                    console.log(servers[0]);
+                    console.log(servers[1]);
+                    console.log(servers[2]);
+                    client.end();
+                });
                 break;
 
-            case "number":
+            case "number":  // sets the number that is going to be converted
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Number must be non-negative. \n"));
                 }
@@ -82,7 +99,7 @@ rl
                     console.log(clc.redBright("Not a supported number!\n"));
                 break;
 
-            case "wanted_conversion":
+            case "wanted_conversion": // sets the conversion needed for the server
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Possible conversions to choose from: \n"));
                     console.log(clc.greenBright("1) 10 to 16\n"));
@@ -104,7 +121,7 @@ rl
                     console.log(clc.redBright("Not a valid conversion choice!\n"));
                 break;
 
-            case "possible_conversions":
+            case "possible_conversions": // sets the possible conversions for the server
                 if(_.isUndefined(message[1])) {
                     console.log(clc.greenBright("Possible conversions to choose from: \n"));
                     console.log(clc.greenBright("1) 10 to 16\n"));
@@ -134,15 +151,15 @@ rl
                 }
                 break;
 
-            case "quit":
+            case "quit":    // quits the application
                 rl.close();
                 break;
 
-            case "start":
-                if(_.isUndefined(serverAddress) || _.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(possibleConversions) || _.isUndefined(conversionServer))
+            case "start":   // starts the conversion process
+                if(_.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(possibleConversions) || _.isUndefined(conversionServer))
                     console.log(clc.redBright("Some parameters weren't assigned!"));
                 else {
-                var conversion = startSequence(serverAddress, number, wantedConversion, conversionServer);
+                var conversion = startSequence(number, wantedConversion, conversionServer);
 
                 console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
                 clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
