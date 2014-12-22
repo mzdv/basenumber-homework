@@ -133,11 +133,6 @@ rl
                     console.log(clc.greenBright("7) 5 to 7\n"));
                     console.log(clc.greenBright("8) 7 to 5\n"));
                 }
-                else if(message[1] === "stop") {
-                    // TODO: Sending of the array to the base server
-                    // TODO: Starting of the conversion server
-                    console.log(clc.greenBright("Sending conversions to the server."));
-                }
                 else if(regexContainer.conversionRegex.test(message[1])) {
                     possibleConversions.push(message[1]);
 
@@ -146,11 +141,11 @@ rl
                     console.log(conversionIndex);
 
                     console.log(clc.greenBright("Entered new conversion: " + clc.yellowBright(possibleConversionTypes[conversionIndex]) + '\n'));
-                    //
+
                     possibleConversions = _.uniq(possibleConversions);
                 }
                 else {
-                    console.log(clc.redBright("Not a supported number!\n"));
+                    console.log(clc.redBright("Not a supported conversion!\n"));
                 }
                 break;
 

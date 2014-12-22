@@ -7,6 +7,7 @@ var fs = require("fs");
 var _ = require("lodash");
 
 const DELIMETER = "|";
+var possibleConversionTypes = ["10 => 16", "16 => 10", "8 => 4", "4 => 8", "2 => 10", "10 => 2", "5 => 7", "7 => 5"];
 
 var incomingData = '';
 var message = [];                          // struktura za parsiranje
@@ -28,8 +29,8 @@ net.createServer(function(socket) {
              else {*/
             console.log(data);
             message = data.split(DELIMETER);
-            var firstSplit = message[1].split(':');
-            var possibleConversions = firstSplit[0].split(',');
+            //var firstSplit = message[1].split(':');
+            var possibleConversions = message[1].split(',');
             //console.log(message[1]);
 
             switch (message[0]) {
