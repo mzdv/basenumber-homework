@@ -51,7 +51,7 @@ rl
                 console.log(clc.greenBright("Number: ") + clc.yellowBright(number) + '\n');
                 console.log(clc.greenBright("Wanted conversion: ") + clc.yellowBright(wantedConversion) + '\n');
                 console.log(clc.blueBright("-------------------------------------------------------------") + '\n');
-                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(possibleConversions) + '\n');  // TODO: Make the output prettier
+                console.log(clc.greenBright("Possible conversions: ") + clc.yellowBright(_.forEach(possibleConversions)) + '\n');
                 break;
 
             case "base_server":
