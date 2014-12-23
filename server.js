@@ -37,11 +37,15 @@ net.createServer(function(socket) {
                         totalConversions.push(conversionsInElement[1].split(','));
                     }
 
-                    for(var i = 0; i < totalConversions.length; i++) {
-                        if(_.contains(totalConversions[i], message[2])) {
-                            var answer = {host: "", conversions: []};
-                            answer.host = (container[i].split(':'))[0];
-                            answer.conversions.push(((container[i].split('#'))[1]).split(','));
+                    for (var j = 0; j < totalConversions.length; j++) {
+                        if (_.contains(totalConversions[j], message[2])) {
+                            var answer = {
+                                host: "",
+                                conversions: []
+                            };
+
+                            answer.host = (container[j].split(':'))[0];
+                            answer.conversions.push(((container[j].split('#'))[1]).split(','));
 
                             possibleServers.push(answer);
                         }
@@ -52,24 +56,31 @@ net.createServer(function(socket) {
                     console.log(container);
 
                     if(!possibleServers.toString()) {
-                        var jsonAnswer = JSON.stringify({error: "CRNA_MI_SE_DZIGERICA_SUSI"});
-                        socket.write(jsonAnswer);
+                        var jsonAnswerTrue = JSON.stringify({error: "CRNA_MI_SE_DZIGERICA_SUSI"});
+                        socket.write(jsonAnswerTrue);
                     }
                     else {
-                        var jsonAnswer = JSON.stringify(possibleServers);
-                        socket.write(jsonAnswer);
+                        var jsonAnswerFalse = JSON.stringify(possibleServers);
+                        socket.write(jsonAnswerFalse);
                     }
 
                     break;
 
                 case "VOZI_ME_ZA_SURCIN_PREKO_LEDINA":  // prijava o izvrsenoj konverziji
-                    var acknowledgementMessage = socket.remoteAddress + '|' + message[1] + '|' + message[2] + '|' + message[3] + '|' + message[4] + message[5] + '\n';
+                    var loggingData = JSON.parse(data);
+
+                    var acknowledgementMessage = {
+                        convertorAddress: socket.remoteAddress,
+                        number: loggingData.number,
+                        convertedNumber: loggingData.convertedNumber,
+                        chosenConversion: possibleConversionTypes[loggingData.conversion]
+                    };
                     // message[1] ip adresa servera za konverziju
                     // message[2] prvobitan broj
                     // message[3] konacan broj
                     // message[4] odabrana konverzija
 
-                    fs.writeFile("conversions.log", acknowledgementMessage, function(err) {
+                    fs.writeFile("conversions.log", JSON.stringify(acknowledgementMessage), function (err) {
                         if(err)
                             console.log(err.toString());
                         else

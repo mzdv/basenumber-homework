@@ -14,7 +14,7 @@ var possibleConversionTypes = ["10 => 16", "16 => 10", "8 => 4", "4 => 8", "2 =>
 var serverAddress;
 var number;
 var wantedConversion;
-var possibleConversions = [];
+var possibleConversions;
 var conversionServer;
 var message = [];
 var response = {};
@@ -73,7 +73,7 @@ rl
 
             case "conversion_server": // sets the server used for converting data
                 var client = net.connect({
-                    host: serverAddress,
+                    host: serverAddress,    //defaults to 127.0.0.1
                     port: 1389
                 }, function(){
                     console.log(clc.greenBright("\nConnection with the base server established. Stand by.\n"));
@@ -91,8 +91,8 @@ rl
                         console.log(clc.greenBright(conversionServer + " chosen for conversion.\n"));
                     }
                     else if(response.length > 1) {
-                            console.log(clc.greenBright("Choose your preferred conversion server: \n"));
-                            console.log(clc.greenBright("------------------------------------------\n"));
+                        console.log(clc.greenBright("Choose your preferred conversion server: \n"));
+                        console.log(clc.greenBright("------------------------------------------\n"));
                         for(var i = 0; i < response.length; i++) {
                             console.log(clc.yellowBright((i+1) + ") " + response[i].host + '\n'));
                         }
@@ -165,6 +165,7 @@ rl
                     console.log(clc.greenBright("8) 7 to 5\n"));
                 }
                 else if(regexContainer.conversionRegex.test(message[1])) {
+                    possibleConversions = [];
                     possibleConversions.push(message[1] - 1);
 
                     var conversionIndex = _.last(possibleConversions);
@@ -180,20 +181,55 @@ rl
                 }
                 break;
 
+            case "start_accepting_conversions":
+                if (_.isUndefined(possibleConversions)) {
+                    console.log(clc.redBright("Input some conversions first.\n"))
+                }
+                else {
+                    console.log(clc.greenBright("Started accepting connections.\n"));
+                    var server = net.createServer(function (socket) {
+                        console.log(clc.greenBright("Client connected! Coming from: " + socket.remoteAddress + '\n'));
+
+                        socket.on("data", function (data) {
+                            var parsedData = JSON.parse(data);
+
+                            var number = parsedData.number;
+                            var conversion = parsedData.conversion;
+
+                            var conversionAggregate = possibleConversions[conversion].split(' => ');
+
+                            var convertedNumber = parseInt(number, conversionAggregate[0]);
+                            var final = {
+                                convertedNumber: convertedNumber.toString(conversionAggregate[1]),
+                                convertorAddress: socket.localAddress,
+                                conversionType: conversion
+                            };
+
+                            socket.end(JSON.stringify(final));
+                        })
+                    });
+
+                    server.listen(1944);
+                }
+
+                rl.prompt();
+
+                break;
+
             case "quit":    // quits the application
                 rl.close();
                 break;
 
-            case "start":   // starts the conversion process
+            case "start_conversion":   // starts the conversion process
                 if(_.isUndefined(number) || _.isUndefined(wantedConversion) || _.isUndefined(possibleConversions) || _.isUndefined(conversionServer))
                     console.log(clc.redBright("Some parameters weren't assigned!"));
                 else {
-                var conversion = startSequence(number, wantedConversion, conversionServer);
+                    var conversion = startSequence(number, wantedConversion, conversionServer);
 
-                console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
-                clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
-                clc.greenBright("Conversion was from base system to base system: ") + clc.yellowBright(conversion.conversionType) + '\n' +
-                clc.greenBright("Conversion done at server: ") + clc.yellowBright(conversion.converterAddress) + '\n');
+                    console.log(clc.greenBright("Converted number is: ") + clc.yellowBright(conversion.convertedNumber) + '\n' +
+                    clc.greenBright("Original number was: ") + clc.yellowBright(number) + '\n' +
+                    clc.greenBright("Conversion was from base system to base system: ") + clc.yellowBright(conversion.conversionType) + '\n' +
+                    clc.greenBright("Conversion done at server: ") + clc.yellowBright(conversion.converterAddress) + '\n');
                 }
                 break;
 
